@@ -1,0 +1,43 @@
+:root {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background-image: linear-gradient(to bottom right, rgb(248, 88, 88) , rgb(38, 71, 73) , rgb(0, 0, 0));
+}
+
+#search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* background-color: black; */
+}
+
+input {
+    height: 39px;
+    width: 300px;
+    border-radius: 30px;
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    box-shadow: 2px 5px 9px black;
+}
+
+button {
+    height: 40px;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 2px 5px 9px black;
+}
+
+
+#images-container {
+    position: relative;
+    z-index: -1;
+}
+
+#leafy {
+    position: absolute;
+}
