@@ -8,22 +8,30 @@ function createPage() {
 
 async function fetchData() {
     // user input for desired anime themes
-    const search = prompt('Search for: ');
+    // const search = prompt('Search for: ');
+    const search = 'Grand Blue';
     // encodes search query into URL
     const encodedSearch = encodeURI(search)
     // input is added to actual url
-    const URL = `https://api.jikan.moe/v3/search/anime?q=${encodedSearch}`
+    const animeSearchURL = `https://api.jikan.moe/v3/search/anime?q=${encodedSearch}`;
 
     //fetch and JSON
-    const fetchedData = await fetch(URL);
-    jsonifiedData = await fetchedData.json();
-    const malID = jsonifiedData.results[0].mal_id
-    const idURL = `https://api.jikan.moe/v3/anime/${malID}/`
-    const fetchedData2 = await fetch(idURL);
-    jsonifiedData2 = await fetchedData2.json();
-    console.log(jsonifiedData2);
+    const fetchedAnimeShortData = await fetch(animeSearchURL);
+    jsonifiedAnimeShortData = await fetchedAnimeShortData.json();
+    const malID = jsonifiedAnimeShortData.results[0].mal_id
+    const animeURL = `https://api.jikan.moe/v3/anime/${malID}/`
+    const fetchedAnimeLongData = await fetch(animeURL);
+    jsonifiedAnimeLongData = await fetchedAnimeLongData.json();
+    console.log(jsonifiedAnimeLongData);
 
+    const youtubeKey = 'AIzaSyAG-LdE_3FYJCgVxh1T6RdWbgx8SCpSuKg';
+    youtubeURL = `https://www.googleapis.com/youtube/v3/videos?id=7lCDEYXw3mM&key=${youtubeKey}&part=snippet,contentDetails,statistics,status`;
 
+    const fetchedYoutubeData = await fetch(youtubeURL);
+    const jsonifiedYoutubeData = await fetchedYoutubeData.json();
+    console.log(jsonifiedYoutubeData);
+
+    
 
 
 
