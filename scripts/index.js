@@ -1,5 +1,36 @@
 const { log } = console;
 
+// create new entry
+function createCard(el) {
+    const newCard = document.createElement('section');
+    newCard.innerHTML = `<section class="">
+    <div class="avatar-image">
+        <img src="${el.image_url}" alt="${el.title}"/>
+    </div>
+    <div class="avatar-content">
+        <h2 class="avatar-header">${el.title}</h2>
+        </div>
+    </section>`;
+    container.appendChild(newCard);
+}
+
+// SKELETON ANIMATION use this to move pictures on the home page - UI - DO
+function myMove() {
+    var elem = document.getElementById('leafy');   
+    var pos = 0;
+    var id = setInterval(frame, 10);
+    function frame() {
+      if (pos == 350) {
+        clearInterval(id);
+      } else {
+        pos++; 
+        elem.style.bottom = pos + 'px'; 
+        elem.style.right = pos + 'px'; 
+        };
+    };
+};
+
+
 function createPage() {
     log('HI');
     // add code here
