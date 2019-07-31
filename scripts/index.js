@@ -1,6 +1,53 @@
 const { log } = console;
 const youtubeAPIKey = 'AIzaSyAG-LdE_3FYJCgVxh1T6RdWbgx8SCpSuKg';
 
+
+// event handlers
+
+// Event handler for the Home text
+document.querySelector('#home-click').addEventListener('click', function(e){
+    e.preventDefault();
+    // toggle(secondPage);
+    const firstPage = document.querySelector('.first-page-container')
+    const secondPage = document.querySelector('.second-page-container')
+    if (firstPage.classList.contains('hidden')) {
+        firstPage.classList.remove('hidden');
+        secondPage.classList.add('hidden');
+    }     
+});
+
+// Event handler for the search button
+document.querySelector('.search-button').addEventListener('click', function(e){
+
+    const firstPage = document.querySelector('.first-page-container')
+    const secondPage = document.querySelector('.second-page-container')
+    // console.log(secondPage);
+    // console.log(firstPage);
+
+    // Check if search bar is empty
+    if (document.querySelector('#search-bar').value === ''){
+        // Alert if the input is invalid/empty
+        alert('Don\'t forget to enter something!');
+        secondPage.classList.remove('hidden');
+        firstPage.classList.add('hidden');
+    } else {
+        // If input is valid continue with search and 
+        e.preventDefault();
+        // createCard();
+    }
+    
+    // toggle(secondPage);
+    if (secondPage.classList.contains('hidden')) {
+        secondPage.classList.remove('hidden');
+        firstPage.classList.add('hidden');
+    } else {
+        secondPage.classList.add('hidden');
+        firstPage.classList.remove('hidden');
+    } 
+});
+
+
+
 // create new entry
 function createCard(el) {
     const newCard = document.createElement('section');
