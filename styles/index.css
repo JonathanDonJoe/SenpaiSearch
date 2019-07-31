@@ -4,27 +4,36 @@
     --txt  : rgb(233, 233, 233);
     --primary: rgb(0, 0, 0);
     --secondary: rgb(153, 28, 28);
-    --alt: rgb(65, 153, 109);
+    --alt: rgb(0, 0, 0);
     font-size: .9rem;
 }
 
 body {
-    height: 100vh;
-    width: 100vw;
+    height: 1000px;
+    width: 100%;
     background-image: linear-gradient(to bottom right, rgb(248, 88, 88) , rgb(38, 71, 73) , rgb(0, 0, 0));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: scroll;
 }
 
 .nav-bar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
-#first-page-container {
+#home-click {
+    color: white;
+}
+
+.first-page-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
+    height: 45vh;
 }
 
 /* #search-container {
@@ -57,15 +66,17 @@ button {
     z-index: -1;
 }
 
-#leafy {
+#luffy {
     position: absolute;
 }
 
 .card-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
     flex-wrap: wrap;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
 }
 
 
