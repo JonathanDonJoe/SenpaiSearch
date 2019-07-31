@@ -1,7 +1,6 @@
 
-const youtubeAPIKey = 'AIzaSyD4WSEk171Jr2goiu4lqARyG_mGgG1WP5I';
+const youtubeAPIKey = 'AIzaSyAF67RmBAeW0hQi7E5zRYeXPr6QZBwykpY';
 
-const jsonifiedOpeningList =
 // event handlers
 
 // Event handler for the Home text
@@ -32,20 +31,74 @@ function createResults() {
     secondPage.classList.remove('hidden');
 }
 
+function createTheRestOfTheCard(youtubeObject) {
 
+    // console.log(youtubeObject);
+
+
+
+
+
+
+
+
+
+    // if no search result hits, ignore it.
+
+    // if (!jsonifiedYoutubeData.items.length) {
+    //     console.log('Search found no results')
+    //     return
+    // }
+
+    // else it logs
+    // console.log(jsonifiedYoutubeData);
+    // console.log(jsonifiedYoutubeData.items[0].id.videoId);
+    // console.log(`https://www.youtube.com/watch?v=${jsonifiedYoutubeData.items[0].id.videoId}`);
+
+    
+
+
+}
 
 // create new entry
-function createCard(el) {
-    const newCard = document.createElement('section');
-    newCard.innerHTML = `<section class="">
-    <div class="avatar-image">
-        <img src="${el.image_url}" alt="${el.title}"/>
-    </div>
-    <div class="avatar-content">
-        <h2 class="avatar-header">${el.title}</h2>
-        </div>
-    </section>`;
-    container.appendChild(newCard);
+async function createCard(jsonifiedAnimeLongData) {
+
+    const openingList = jsonifiedAnimeLongData.opening_themes;
+    const endingList = jsonifiedAnimeLongData.ending_themes;
+
+    // const newList = [];
+    let awaitYoutubeItem;
+    // openingList.forEach(item => searchYoutube(item));
+    openingList.forEach(async function(item) { 
+        awaitYoutubeItem = await searchYoutube(item);
+
+        await createTheRestOfTheCard(awaitYoutubeItem);
+        // newList.push(awaitYoutubeItem);
+        // console.log(awaitYoutubeItem);
+    });
+    // const testArr = newList.map(e => e);
+
+
+    // awaitYoutubeItem = await searchYoutube(openingList);
+    // newList.push(awaitYoutubeItem);
+    // console.log(awaitYoutubeItem)
+
+
+    // setTimeout(() => console.log(newList[0]), 2000);
+    // console.log(newList);
+
+    // localStorage['openingAnimeObject'] = JSON.stringify(newList);
+
+    // const newCard = document.createElement('section');
+    // newCard.innerHTML = `<section class="">
+    // <div class="avatar-image">
+    //     <img src="${el.image_url}" alt="${el.title}"/>
+    // </div>
+    // <div class="avatar-content">
+    //     <h2 class="avatar-header">${el.title}</h2>
+    //     </div>
+    // </section>`;
+    // container.appendChild(newCard);
 }
 
 // SKELETON ANIMATION use this to move pictures on the home page - UI - DO
@@ -63,13 +116,6 @@ function myMove() {
         };
     };
 };
-
-
-function createPage() {
-    log('HI');
-    // add code here
-}
-
 
 // gets the short anime object
 async function getAnimeShortData(search) {
@@ -90,25 +136,15 @@ async function getAnimeLongData(shortData) {
     return await fetchedAnimeLongData.json();
 }
 
-async function searchThemes(item) {
+async function searchYoutube(item) {
     // Queries for the item
     const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&key=${youtubeAPIKey}&q=${item}`;
     const fetchedYoutubeData = await fetch(youtubeURL);
     const jsonifiedYoutubeData = await fetchedYoutubeData.json();
-
-    // if no search result hits, ignore it.
-    if (!jsonifiedYoutubeData.items.length) {
-        console.log('Search found no results')
-        return
-    }
-    // else it logs
-    console.log(jsonifiedYoutubeData);
-    console.log(jsonifiedYoutubeData.items[0].id.videoId);
-    console.log(`https://www.youtube.com/watch?v=${jsonifiedYoutubeData.items[0].id.videoId}`);
-
-
-    // return jsonifiedYoutubeData;
+    return jsonifiedYoutubeData
 }
+
+
 
 
 async function main() {
@@ -127,11 +163,11 @@ async function main() {
     console.log(endingList);
     
     // Search youtube for each OP/ED
-    // openingList.forEach(item => searchThemes(item));
-    endingList.forEach(item => searchThemes(item));
+    // openingList.forEach(item => searchYoutube(item));
+    // endingList.forEach(item => searchYoutube(item));
     
     // create page that draws all data
-    createPage();
+    createCard(jsonifiedAnimeLongData);
 }
 
 
