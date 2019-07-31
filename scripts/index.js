@@ -1,50 +1,36 @@
-const { log } = console;
-const youtubeAPIKey = 'AIzaSyAG-LdE_3FYJCgVxh1T6RdWbgx8SCpSuKg';
 
+const youtubeAPIKey = 'AIzaSyD4WSEk171Jr2goiu4lqARyG_mGgG1WP5I';
 
+const jsonifiedOpeningList =
 // event handlers
 
 // Event handler for the Home text
 document.querySelector('#home-click').addEventListener('click', function(e){
     e.preventDefault();
-    // toggle(secondPage);
+    const secondPage = document.querySelector('.second-page-container')
+    secondPage.classList.add('hidden');
+})
+
+
+document.querySelector('.search-button').addEventListener('click', (e) => {
     const firstPage = document.querySelector('.first-page-container')
     const secondPage = document.querySelector('.second-page-container')
-    if (firstPage.classList.contains('hidden')) {
-        firstPage.classList.remove('hidden');
-        secondPage.classList.add('hidden');
-    }     
-});
-
-// Event handler for the search button
-document.querySelector('.search-button').addEventListener('click', function(e){
-
-    const firstPage = document.querySelector('.first-page-container')
-    const secondPage = document.querySelector('.second-page-container')
-    // console.log(secondPage);
-    // console.log(firstPage);
 
     // Check if search bar is empty
     if (document.querySelector('#search-bar').value === ''){
         // Alert if the input is invalid/empty
         alert('Don\'t forget to enter something!');
-        secondPage.classList.remove('hidden');
-        firstPage.classList.add('hidden');
     } else {
-        // If input is valid continue with search and 
+        // If input is valid continue with search and populate
         e.preventDefault();
-        // createCard();
+        createResults();
     }
-    
-    // toggle(secondPage);
-    if (secondPage.classList.contains('hidden')) {
-        secondPage.classList.remove('hidden');
-        firstPage.classList.add('hidden');
-    } else {
-        secondPage.classList.add('hidden');
-        firstPage.classList.remove('hidden');
-    } 
-});
+})
+
+function createResults() {
+    const secondPage = document.querySelector('.second-page-container')
+    secondPage.classList.remove('hidden');
+}
 
 
 
@@ -64,7 +50,7 @@ function createCard(el) {
 
 // SKELETON ANIMATION use this to move pictures on the home page - UI - DO
 function myMove() {
-    var elem = document.getElementById('leafy');   
+    var elem = document.getElementById('luffy');   
     var pos = 0;
     var id = setInterval(frame, 10);
     function frame() {
@@ -120,6 +106,7 @@ async function searchThemes(item) {
     console.log(jsonifiedYoutubeData.items[0].id.videoId);
     console.log(`https://www.youtube.com/watch?v=${jsonifiedYoutubeData.items[0].id.videoId}`);
 
+
     // return jsonifiedYoutubeData;
 }
 
@@ -140,7 +127,7 @@ async function main() {
     console.log(endingList);
     
     // Search youtube for each OP/ED
-    openingList.forEach(item => searchThemes(item));
+    // openingList.forEach(item => searchThemes(item));
     endingList.forEach(item => searchThemes(item));
     
     // create page that draws all data
