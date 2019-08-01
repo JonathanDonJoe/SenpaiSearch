@@ -13,6 +13,9 @@
 }
 
 body {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
     height: 1000px;
     width: 100%;
     background-image: linear-gradient(to bottom right, rgb(248, 88, 88) , rgb(38, 71, 73) , rgb(0, 0, 0));
@@ -35,11 +38,11 @@ body {
 .nav-bar {
     display: flex;
     position: fixed;
-    bottom: 0;
+    top: 0;
     right: 0;
 }
 
-#home-click {
+#reset {
     color: white;
 }
 
@@ -70,11 +73,12 @@ button {
 /* This is all card stuff */
 
 .second-page-container {
-    display: none;
+    /* display: none; */
     justify-content: center;
 }
 
 .card-container {
+    margin: auto;
     display: flex;
     justify-content: space-evenly;
     width: 80%;
@@ -163,6 +167,7 @@ button {
 .big-card {
     position: absolute;
     top: 100px;
+    left: 10%;
     justify-content: center;
     flex-direction: column;
     width: 80%;
@@ -184,6 +189,7 @@ button {
 .big-card-image {
     margin: auto;
     width: auto;
+    max-width: 250px;
 }
 
 .big-card-image > img {
@@ -205,6 +211,7 @@ button {
 }
 
 .embedded-video {
+    /* border-radius: 30px; */
     width:100%;
     height:100%;
     width:400px;
@@ -212,4 +219,8 @@ button {
     float: none;
     clear: both;
     margin: 2px auto;
+}
+
+.video-stream {
+    /* border-radius: 30px; */
 }
