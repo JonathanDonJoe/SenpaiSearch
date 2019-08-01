@@ -57,19 +57,37 @@ function showCardContainer() {
 }
 
 
-function updateVideo(videoElement, youtubeObject) {
-    videoElement.data = `https://www.youtube.com/embed/${youtubeObject.items[1].id.videoId}` // the video
+function updateVideo(videoElement, youtubeObject, count) {
+    videoElement.data = `https://www.youtube.com/embed/${youtubeObject.items[count].id.videoId}` // the video
 }
 
+
+const nextVideo = function(el) {
+    let count = 0;
+    return function(youtubeObject) {
+        count++;
+        if (count === youtubeObject.items.length) {
+            count = 0;
+        }
+        console.log(count);
+        updateVideo(el, youtubeObject, count);
+    }
+
+}
+
+
 function addNextButton(container, videoElement, youtubeObject) {
+    var scrollVideo = nextVideo(videoElement);
     const button = document.createElement('button');
     button.classList.add('next-video-button');
     button.innerText = 'Next Video';
     container.append(button);
-    button.addEventListener('click', e => updateVideo(videoElement, youtubeObject));
+    button.addEventListener('click', () => scrollVideo(youtubeObject));
 
     
 }
+
+
 
 
 function makeBigCard(jsonifiedAnimeLongData) {
