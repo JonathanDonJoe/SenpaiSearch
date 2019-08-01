@@ -1,5 +1,5 @@
 
-const youtubeAPIKey = 'AIzaSyAF67RmBAeW0hQi7E5zRYeXPr6QZBwykpY';
+const youtubeAPIKey = 'REPLACE_WITH_KEY';
 
 // Global event listener
 // document.addEventListener('click', (e) => {
@@ -18,8 +18,6 @@ document.querySelector('#home-click').addEventListener('click', function(e){
 
 
 document.querySelector('.search-button').addEventListener('click', (e) => {
-    const firstPage = document.querySelector('.first-page-container')
-    const secondPage = document.querySelector('.second-page-container')
 
     // Check if search bar is empty
     if (document.querySelector('#search-bar').value === ''){
@@ -37,33 +35,19 @@ function createResults() {
     secondPage.classList.remove('hidden');
 }
 
+//Create the rest of the card by embeding the video
 function createTheRestOfTheCard(youtubeObject) {
+//    const link = `https://www.youtube.com/watch?v=${youtubeObject.items[0].id.videoId}`;
+   const link = `https://www.youtube.com/embed/${youtubeObject.items[0].id.videoId}`;
+   const container = document.querySelector('.main-container');
+   const el = document.createElement('div')
+   el.innerHTML = 
+        `
+        <object style="width:100%;height:100%;width: 400px; height: 200px; float: none; clear: both; margin: 2px auto;" data="${link}">
+        </object>
+        `
 
-    // console.log(youtubeObject);
-
-
-
-
-
-
-
-
-
-    // if no search result hits, ignore it.
-
-    // if (!jsonifiedYoutubeData.items.length) {
-    //     console.log('Search found no results')
-    //     return
-    // }
-
-    // else it logs
-    // console.log(jsonifiedYoutubeData);
-    // console.log(jsonifiedYoutubeData.items[0].id.videoId);
-    // console.log(`https://www.youtube.com/watch?v=${jsonifiedYoutubeData.items[0].id.videoId}`);
-
-    
-
-
+container.append(el);
 }
 
 // create new entry
@@ -115,39 +99,20 @@ async function createCard(jsonifiedAnimeLongData) {
     const openingList = jsonifiedAnimeLongData.opening_themes;
     const endingList = jsonifiedAnimeLongData.ending_themes;
 
-    // const newList = [];
+    const compiledList = []
+    openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
+    endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
+    
+    console.log(compiledList);
+
     let awaitYoutubeItem;
     // openingList.forEach(item => searchYoutube(item));
-    openingList.forEach(async function(item) { 
+    compiledList.forEach(async function(item) { 
         awaitYoutubeItem = await searchYoutube(item);
-
         await createTheRestOfTheCard(awaitYoutubeItem);
         // newList.push(awaitYoutubeItem);
         // console.log(awaitYoutubeItem);
     });
-    // const testArr = newList.map(e => e);
-
-
-    // awaitYoutubeItem = await searchYoutube(openingList);
-    // newList.push(awaitYoutubeItem);
-    // console.log(awaitYoutubeItem)
-
-
-    // setTimeout(() => console.log(newList[0]), 2000);
-    // console.log(newList);
-
-    // localStorage['openingAnimeObject'] = JSON.stringify(newList);
-
-    // const newCard = document.createElement('section');
-    // newCard.innerHTML = `<section class="">
-    // <div class="avatar-image">
-    //     <img src="${el.image_url}" alt="${el.title}"/>
-    // </div>
-    // <div class="avatar-content">
-    //     <h2 class="avatar-header">${el.title}</h2>
-    //     </div>
-    // </section>`;
-    // container.appendChild(newCard);
 }
 
 // SKELETON ANIMATION use this to move pictures on the home page - UI - DO
@@ -185,16 +150,36 @@ async function getAnimeLongData(shortData) {
     return await fetchedAnimeLongData.json();
 }
 
+
 async function searchYoutube(item) {
-    // Queries for the item
-    const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&key=${youtubeAPIKey}&q=${item}`;
-    const fetchedYoutubeData = await fetch(youtubeURL);
-    const jsonifiedYoutubeData = await fetchedYoutubeData.json();
+    let jsonifiedYoutubeData;
+    // Fetch if there is no local storage
+    if(!localStorage.getItem(item)) {
+        // Encodes the item to search for url with no spaces and removes quotes
+        newItem = encodeURI(item).split(`%22`).join(''); 
+        const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&key=${youtubeAPIKey}&q=${newItem}`;
+        // Queries for the item and formats to json
+        const fetchedYoutubeData = await fetch(youtubeURL);
+        jsonifiedYoutubeData = await fetchedYoutubeData.json();
+        //
+        // Code: If the return list is empty, then set localstorage of item to 'N/A', and empty return.  In the non-associated else block, make sure that if localstorage of item is 'N/A', then empty return there as well
+        //
+
+        // Store fetched data into local storage
+        localStorage[item] = JSON.stringify(jsonifiedYoutubeData);
+
+        console.log('Queried, stored in local storage, and returned data.')
+    } else { // Pull from local storage
+        jsonifiedYoutubeData = await JSON.parse(localStorage.getItem(item))
+
+        console.log('Found data in local storage and returned')
+    }
+
+    // return the data
+    console.log('This is the jsonifiedYoutubeData: ')
+    console.log(jsonifiedYoutubeData);
     return jsonifiedYoutubeData
 }
-
-
-
 
 async function main() {
     // user input for desired anime themes
