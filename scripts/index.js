@@ -1,7 +1,13 @@
 
 const youtubeAPIKey = 'AIzaSyAF67RmBAeW0hQi7E5zRYeXPr6QZBwykpY';
 
-// event handlers
+// Global event listener
+// document.addEventListener('click', (e) => {
+//     if (e.target === 'card') {
+//         bigCard.classList.remove('hidden')
+//     };
+
+// Accordian
 
 // Event handler for the Home text
 document.querySelector('#home-click').addEventListener('click', function(e){
@@ -62,6 +68,49 @@ function createTheRestOfTheCard(youtubeObject) {
 
 // create new entry
 async function createCard(jsonifiedAnimeLongData) {
+    //results page populate after user input
+    const cardContainer = document.querySelector('.card-container')
+    const cardItem = document.createElement('div')
+    cardItem.classList.add('card')
+    console.log(cardContainer);
+    console.log(jsonifiedAnimeLongData);
+
+
+    cardItem.innerHTML = 
+    `
+    <div class="card-image">
+        <img src="${jsonifiedAnimeLongData.image_url}"/>
+    </div>
+    <div class="card-content">
+        <h1 class="card-header">${jsonifiedAnimeLongData.title}</h1>
+    </div>
+    `;
+    cardContainer.appendChild(cardItem)
+
+
+
+    const bigCard = document.querySelector('.big-card')
+    
+    bigCard.innerHTML =
+    `
+    <span class="close">&times;</span>
+    <div class="big-card-image"><img src="${jsonifiedAnimeLongData.image_url}"/></div>
+    <h1 class="big-card-title">${jsonifiedAnimeLongData.title}</h1>
+    <div class="big-card-moreinfo">
+        <div class="synopsis">${jsonifiedAnimeLongData.synopsis}</div>
+        <div class="genre">Genre: ${jsonifiedAnimeLongData.genres[0].name}</div>
+        <div class="rating">Rating: ${jsonifiedAnimeLongData.rating}</div>
+        <div class="score">Score: ${jsonifiedAnimeLongData.score}</div>
+        <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
+    </div>
+    <div class="big-card-videos"></div>
+    `;
+    console.log(bigCard)
+    
+
+
+
+
 
     const openingList = jsonifiedAnimeLongData.opening_themes;
     const endingList = jsonifiedAnimeLongData.ending_themes;
