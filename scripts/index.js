@@ -35,19 +35,48 @@ function createResults() {
     secondPage.classList.remove('hidden');
 }
 
+
+function updateVideo(videoElement, youtubeObject) {
+    videoElement.data = `https://www.youtube.com/embed/${youtubeObject.items[1].id.videoId}` // the video
+}
+
+function addNextButton(container, videoElement, youtubeObject) {
+    const button = document.createElement('button');
+    button.classList.add('next-video-button');
+    button.innerText = 'Next Video';
+    container.append(button);
+    button.addEventListener('click', e => updateVideo(videoElement, youtubeObject));
+
+    
+}
+
+
 //Create the rest of the card by embeding the video
 function createTheRestOfTheCard(youtubeObject) {
-//    const link = `https://www.youtube.com/watch?v=${youtubeObject.items[0].id.videoId}`;
-   const link = `https://www.youtube.com/embed/${youtubeObject.items[0].id.videoId}`;
-   const container = document.querySelector('.main-container');
-   const el = document.createElement('div')
-   el.innerHTML = 
-        `
-        <object style="width:100%;height:100%;width: 400px; height: 200px; float: none; clear: both; margin: 2px auto;" data="${link}">
-        </object>
-        `
 
-container.append(el);
+    const youtubeIdList = [];
+
+    for (let i=0; i < youtubeObject.items.length;i++
+        ) {
+            youtubeIdList.push(youtubeObject.items[i].id.videoId)
+        }
+
+    console.log(youtubeIdList);
+
+
+
+    //    const link = `https://www.youtube.com/watch?v=${youtubeObject.items[0].id.videoId}`;
+    const link = `https://www.youtube.com/embed/${youtubeObject.items[0].id.videoId}`;
+    const container = document.querySelector('.main-container');
+    const el = document.createElement('div')
+    el.classList.add('single-video-container')
+
+    const video = document.createElement('object');
+    video.data = link;
+    el.append(video)
+   
+    addNextButton(el, video, youtubeObject)
+    container.append(el);
 }
 
 // create new entry
@@ -189,6 +218,7 @@ async function main() {
     // Queries the short and long anime data
     const jsonifiedAnimeShortData = await getAnimeShortData(search);
     const jsonifiedAnimeLongData = await getAnimeLongData(jsonifiedAnimeShortData);
+    console.log(jsonifiedAnimeLongData)
     
     // indexes the OP/ED lists
     const openingList = jsonifiedAnimeLongData.opening_themes;
