@@ -7,7 +7,7 @@ const youtubeAPIKey = 'PLACEHOLDER API KEY';
 // Accordian
 
 // Event listener for the Home text
-document.querySelector('#home-click').addEventListener('click',(e) => {
+document.querySelector('#reset').addEventListener('click',(e) => {
     e.preventDefault();
     const secondPage = document.querySelector('.second-page-container')
     // secondPage.style.display = 'none';
@@ -53,7 +53,7 @@ document.querySelector('.search-button').addEventListener('click', async functio
 
 function showCardContainer() {
     const secondPage = document.querySelector('.second-page-container')
-    secondPage.style.display = 'flex';
+    secondPage.classList.remove('hidden');
 }
 
 
@@ -105,10 +105,10 @@ function makeBigCard(jsonifiedAnimeLongData) {
         <div class="score">Score: ${jsonifiedAnimeLongData.score}</div>
         <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
     </div>
-    <div class="big-card-videos"></div>
     `;
     console.log(bigCard)
     
+    // <div class="big-card-videos"></div>
 
     // Click event on close button
     document.querySelector('#close').addEventListener('click', (e) => {
@@ -117,25 +117,36 @@ function makeBigCard(jsonifiedAnimeLongData) {
     });
     console.log(document.querySelector('#close'));
 
+
+
+
+
+    const openingList = jsonifiedAnimeLongData.opening_themes;
+    const endingList = jsonifiedAnimeLongData.ending_themes;
+
+    const compiledList = []
+    openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
+    endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
+    
+    console.log(compiledList);
+
+    let awaitYoutubeItem;
+    // openingList.forEach(item => searchYoutube(item));
+    compiledList.forEach(async function(item) { 
+        awaitYoutubeItem = await searchYoutube(item);
+        await createBigCardVideos(awaitYoutubeItem);
+        // newList.push(awaitYoutubeItem);
+        // console.log(awaitYoutubeItem);
+    });
+
 }
 
 //Create the rest of the card by embeding the video
-function createTheRestOfTheCard(youtubeObject) {
-
-    const youtubeIdList = [];
-
-    for (let i=0; i < youtubeObject.items.length;i++
-        ) {
-            youtubeIdList.push(youtubeObject.items[i].id.videoId)
-        }
-
-    console.log(youtubeIdList);
-
-
+function createBigCardVideos(youtubeObject) {
 
     //    const link = `https://www.youtube.com/watch?v=${youtubeObject.items[0].id.videoId}`;
     const link = `https://www.youtube.com/embed/${youtubeObject.items[0].id.videoId}`;
-    const container = document.querySelector('.main-container');
+    const container = document.querySelector('.big-card');
     const el = document.createElement('div')
     el.classList.add('single-video-container')
 
@@ -168,28 +179,6 @@ async function createCard(jsonifiedAnimeLongData) {
     `;
     cardContainer.appendChild(cardItem)
 
-
-
-   
-
-
-    const openingList = jsonifiedAnimeLongData.opening_themes;
-    const endingList = jsonifiedAnimeLongData.ending_themes;
-
-    const compiledList = []
-    openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
-    endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
-    
-    console.log(compiledList);
-
-    let awaitYoutubeItem;
-    // openingList.forEach(item => searchYoutube(item));
-    compiledList.forEach(async function(item) { 
-        awaitYoutubeItem = await searchYoutube(item);
-        await createTheRestOfTheCard(awaitYoutubeItem);
-        // newList.push(awaitYoutubeItem);
-        // console.log(awaitYoutubeItem);
-    });
 }
 
 // SKELETON ANIMATION use this to move pictures on the home page - UI - DO
