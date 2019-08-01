@@ -1,23 +1,21 @@
 
-const youtubeAPIKey = 'REPLACE_WITH_KEY';
+const youtubeAPIKey = 'PLACEHOLDER API KEY';
 
-// Global event listener
-// document.addEventListener('click', (e) => {
-//     if (e.target === 'card') {
-//         bigCard.classList.remove('hidden')
-//     };
 
+
+// console.log(document.querySelector('.card-container'));
 // Accordian
 
-// Event handler for the Home text
-document.querySelector('#home-click').addEventListener('click', function(e){
+// Event listener for the Home text
+document.querySelector('#home-click').addEventListener('click',(e) => {
     e.preventDefault();
     const secondPage = document.querySelector('.second-page-container')
-    secondPage.classList.add('hidden');
-})
+    // secondPage.style.display = 'none';
+    secondPage.classList.add('hidden')
+    })
 
-
-document.querySelector('.search-button').addEventListener('click', (e) => {
+// Event listener for search button
+document.querySelector('.search-button').addEventListener('click', async function(e) {
 
     // Check if search bar is empty
     if (document.querySelector('#search-bar').value === ''){
@@ -26,13 +24,36 @@ document.querySelector('.search-button').addEventListener('click', (e) => {
     } else {
         // If input is valid continue with search and populate
         e.preventDefault();
-        createResults();
+
+
+        const cardContainer = document.querySelector('.card-container');
+        console.log(cardContainer)
+        cardContainer.innerHTML = '';
+
+        const secondPage = document.querySelector('.second-page-container')
+        secondPage.classList.remove('hidden')
+
+
+        const jsonifiedAnimeLongData =  await searchAnime();
+        console.log(jsonifiedAnimeLongData)
+        
+        
+        // Container event listener
+        document.querySelector('.card-container').addEventListener('click', (e) => {
+            if (e.target !== e.currentTarget) {
+            const bigCard = document.querySelector('.big-card')
+            makeBigCard(jsonifiedAnimeLongData)
+            bigCard.classList.remove('hidden');
+            }
+        })
+        showCardContainer();
     }
 })
 
-function createResults() {
+
+function showCardContainer() {
     const secondPage = document.querySelector('.second-page-container')
-    secondPage.classList.remove('hidden');
+    secondPage.style.display = 'flex';
 }
 
 
@@ -50,6 +71,35 @@ function addNextButton(container, videoElement, youtubeObject) {
     
 }
 
+
+function makeBigCard(jsonifiedAnimeLongData) {
+    const bigCard = document.querySelector('.big-card')
+    
+    bigCard.innerHTML =
+    `
+    <span id="close">&times;</span>
+    <div class="big-card-image"><img src="${jsonifiedAnimeLongData.image_url}"/></div>
+    <h1 class="big-card-title">${jsonifiedAnimeLongData.title}</h1>
+    <div class="big-card-moreinfo">
+        <div class="synopsis">${jsonifiedAnimeLongData.synopsis}</div>
+        <div class="genre">Genre: ${jsonifiedAnimeLongData.genres.name}</div>
+        <div class="rating">Rating: ${jsonifiedAnimeLongData.rating}</div>
+        <div class="score">Score: ${jsonifiedAnimeLongData.score}</div>
+        <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
+    </div>
+    <div class="big-card-videos"></div>
+    `;
+    console.log(bigCard)
+    
+
+    // Click event on close button
+    document.querySelector('#close').addEventListener('click', (e) => {
+        const bigCard = document.querySelector('.big-card')
+        bigCard.innerHTML = '';
+    });
+    console.log(document.querySelector('#close'));
+
+}
 
 //Create the rest of the card by embeding the video
 function createTheRestOfTheCard(youtubeObject) {
@@ -85,8 +135,8 @@ async function createCard(jsonifiedAnimeLongData) {
     const cardContainer = document.querySelector('.card-container')
     const cardItem = document.createElement('div')
     cardItem.classList.add('card')
-    console.log(cardContainer);
-    console.log(jsonifiedAnimeLongData);
+    // console.log(cardContainer);
+    // console.log(jsonifiedAnimeLongData);
 
 
     cardItem.innerHTML = 
@@ -102,27 +152,7 @@ async function createCard(jsonifiedAnimeLongData) {
 
 
 
-    const bigCard = document.querySelector('.big-card')
-    
-    bigCard.innerHTML =
-    `
-    <span class="close">&times;</span>
-    <div class="big-card-image"><img src="${jsonifiedAnimeLongData.image_url}"/></div>
-    <h1 class="big-card-title">${jsonifiedAnimeLongData.title}</h1>
-    <div class="big-card-moreinfo">
-        <div class="synopsis">${jsonifiedAnimeLongData.synopsis}</div>
-        <div class="genre">Genre: ${jsonifiedAnimeLongData.genres[0].name}</div>
-        <div class="rating">Rating: ${jsonifiedAnimeLongData.rating}</div>
-        <div class="score">Score: ${jsonifiedAnimeLongData.score}</div>
-        <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
-    </div>
-    <div class="big-card-videos"></div>
-    `;
-    console.log(bigCard)
-    
-
-
-
+   
 
 
     const openingList = jsonifiedAnimeLongData.opening_themes;
@@ -189,7 +219,7 @@ async function searchYoutube(item) {
         const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&key=${youtubeAPIKey}&q=${newItem}`;
         // Queries for the item and formats to json
         const fetchedYoutubeData = await fetch(youtubeURL);
-        jsonifiedYoutubeData = await fetchedYoutubeData.json();
+        const jsonifiedYoutubeData = await fetchedYoutubeData.json();
         //
         // Code: If the return list is empty, then set localstorage of item to 'N/A', and empty return.  In the non-associated else block, make sure that if localstorage of item is 'N/A', then empty return there as well
         //
@@ -210,14 +240,14 @@ async function searchYoutube(item) {
     return jsonifiedYoutubeData
 }
 
-async function main() {
+async function searchAnime() {
     // user input for desired anime themes
     // const search = prompt('Search for: ');
     const search = 'Grand Blue';
     
     // Queries the short and long anime data
     const jsonifiedAnimeShortData = await getAnimeShortData(search);
-    const jsonifiedAnimeLongData = await getAnimeLongData(jsonifiedAnimeShortData);
+    jsonifiedAnimeLongData = await getAnimeLongData(jsonifiedAnimeShortData);
     console.log(jsonifiedAnimeLongData)
     
     // indexes the OP/ED lists
@@ -232,9 +262,11 @@ async function main() {
     
     // create page that draws all data
     createCard(jsonifiedAnimeLongData);
+
+    return jsonifiedAnimeLongData;
 }
 
 
 
 
-main();
+// main();
