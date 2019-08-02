@@ -38,6 +38,12 @@ document.querySelector('.search-button').addEventListener('click', async functio
 
         const cardContainer = document.querySelector('.card-container');
         // console.log(cardContainer)
+
+
+
+        cardContainer.removeEventListener('click', window.populateBigCard)
+
+
         cardContainer.innerHTML = '';
 
         const secondPage = document.querySelector('.second-page-container')
@@ -47,17 +53,24 @@ document.querySelector('.search-button').addEventListener('click', async functio
         const jsonifiedAnimeLongDataList =  await searchAnime(userInput);
         // console.log(jsonifiedAnimeLongDataList)
         
-        
-        // Container event listener
-        document.querySelector('.card-container').addEventListener('click', (e) => {
+        window.populateBigCard = (e) => {
+            console.log('hi')
             if (e.target !== e.currentTarget) {
+                console.log(e.target)
+                console.log('hii')
             // const bigCard = document.querySelector('.big-card')
             let ourTarget = getClosestParent(e.target)
-            // console.log(ourTarget)
+            console.log(ourTarget)
+            console.log(ourTarget.dataset.index)
+            console.log(jsonifiedAnimeLongDataList)
+            console.log(jsonifiedAnimeLongDataList[ourTarget.dataset.index])
             const bigCard = makeBigCard(jsonifiedAnimeLongDataList[ourTarget.dataset.index]);
             bigCard.classList.remove('hidden');
-            }
-        })
+            } 
+        }
+
+        // Container event listener
+        document.querySelector('.card-container').addEventListener('click', window.populateBigCard)
         showCardContainer();
     }
 })
@@ -105,6 +118,9 @@ function addNextButton(container, videoElement, youtubeObject) {
 function makeBigCard(jsonifiedAnimeLongData) {
     const bigCard = document.querySelector('.big-card')
     
+    let animeGenres = jsonifiedAnimeLongData.genres.map(item => item.name)
+    // console.log(animeGenres.join(', '))
+
     bigCard.innerHTML =
     `
     <span id="close">&times;</span>
@@ -112,7 +128,8 @@ function makeBigCard(jsonifiedAnimeLongData) {
     <h1 class="big-card-title">${jsonifiedAnimeLongData.title}</h1>
     <div class="big-card-moreinfo">
         <div class="synopsis">${jsonifiedAnimeLongData.synopsis}</div>
-        <div class="genre">Genre: ${jsonifiedAnimeLongData.genres.name}</div>
+        <br>
+        <div class="genre">Genre: ${animeGenres.join(', ')}</div>
         <div class="rating">Rating: ${jsonifiedAnimeLongData.rating}</div>
         <div class="score">Score: ${jsonifiedAnimeLongData.score}</div>
         <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
