@@ -89,25 +89,26 @@ function updateVideo(videoElement, youtubeObject, count) {
 
 const nextVideo = function(el) {
     let count = 0;
-    return function(youtubeObject) {
+    return function(youtubeObject, vTitle) {
         count++;
         if (count === youtubeObject.items.length) {
             count = 0;
         }
         console.log(count);
         updateVideo(el, youtubeObject, count);
+        vTitle.innerText = youtubeObject.items[count].snippet.title
     }
 
 }
 
 
-function addNextButton(container, videoElement, youtubeObject) {
+function addNextButton(container, videoElement, youtubeObject, vTitle) {
     var scrollVideo = nextVideo(videoElement);
     const button = document.createElement('button');
     button.classList.add('next-video-button');
     button.innerText = 'Next Video';
     container.append(button);
-    button.addEventListener('click', () => scrollVideo(youtubeObject));
+    button.addEventListener('click', () => scrollVideo(youtubeObject, vTitle));
 
     
 }
@@ -187,11 +188,20 @@ function createBigCardVideos(youtubeObject) {
     const el = document.createElement('div')
     el.classList.add('single-video-container')
 
+    console.log(youtubeObject)
+
+    const videoTitle = youtubeObject.items[0].snippet.title;
+
+    const vTitle = document.createElement('h3');
+    vTitle.innerText = videoTitle;
+    vTitle.classList.add('video-title')    
+    el.append(vTitle);
+
     const video = document.createElement('object');
     video.data = link;
     el.append(video)
    
-    addNextButton(el, video, youtubeObject)
+    addNextButton(el, video, youtubeObject, vTitle)
     container.append(el);
 }
 
