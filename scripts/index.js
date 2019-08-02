@@ -1,5 +1,5 @@
 
-const youtubeAPIKey = 'AIzaSyCtH9DYUMXGQVW-yRHLeDAiBefH5AQ4Q8w';
+const youtubeAPIKey = 'AIzaSyBS4knofqrTkrRQ5ReSUUGqG8GoC2s6GVg';
 
 
 
@@ -27,7 +27,7 @@ function getClosestParent(el) {
 // Event listener for search button
 document.querySelector('.search-button').addEventListener('click', async function(e) {
     let userInput = document.querySelector('#search-bar').value
-    console.log(userInput)
+    console.log(`User has inputted: ${userInput}`)
     // Check if search bar is empty
     if ( userInput.length < 3 ){
         // Alert if the input is invalid/empty
@@ -37,7 +37,7 @@ document.querySelector('.search-button').addEventListener('click', async functio
         e.preventDefault();
 
         const cardContainer = document.querySelector('.card-container');
-        console.log(cardContainer)
+        // console.log(cardContainer)
         cardContainer.innerHTML = '';
 
         const secondPage = document.querySelector('.second-page-container')
@@ -45,16 +45,15 @@ document.querySelector('.search-button').addEventListener('click', async functio
 
 
         const jsonifiedAnimeLongDataList =  await searchAnime(userInput);
-        console.log(jsonifiedAnimeLongDataList)
+        // console.log(jsonifiedAnimeLongDataList)
         
         
         // Container event listener
         document.querySelector('.card-container').addEventListener('click', (e) => {
             if (e.target !== e.currentTarget) {
             // const bigCard = document.querySelector('.big-card')
-            console.log('look here')
             let ourTarget = getClosestParent(e.target)
-            console.log(ourTarget)
+            // console.log(ourTarget)
             const bigCard = makeBigCard(jsonifiedAnimeLongDataList[ourTarget.dataset.index]);
             bigCard.classList.remove('hidden');
             }
@@ -119,7 +118,7 @@ function makeBigCard(jsonifiedAnimeLongData) {
         <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
     </div>
     `;
-    console.log(bigCard)
+    // console.log(bigCard)
     
     // <div class="big-card-videos"></div>
 
@@ -127,9 +126,9 @@ function makeBigCard(jsonifiedAnimeLongData) {
     document.querySelector('#close').addEventListener('click', (e) => {
         const bigCard = document.querySelector('.big-card')
         while (bigCard.firstChild) {bigCard.removeChild(bigCard.firstChild);};
-        bigCard.innerHTML = ''
+        // bigCard.innerHTML = ''
     });
-    console.log(document.querySelector('#close'));
+    // console.log(document.querySelector('#close'));
 
 
 
@@ -142,13 +141,18 @@ function makeBigCard(jsonifiedAnimeLongData) {
     openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
     endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
     
+    console.log(`The compiled list of OP/EDs:`);
     console.log(compiledList);
 
     let awaitYoutubeItem;
     // openingList.forEach(item => searchYoutube(item));
     compiledList.forEach(async function(item) { 
         awaitYoutubeItem = await searchYoutube(item);
+        // if (awaitYoutubeItem[1]) {
+        //     await createBigCardVideos(awaitYoutubeItem[0]);
+        // }
         await createBigCardVideos(awaitYoutubeItem);
+        await console.log(`Successfully Embedded Video: \n ${item}`)
         // newList.push(awaitYoutubeItem);
         // console.log(awaitYoutubeItem);
     });
@@ -245,6 +249,7 @@ async function getAnimeLongData(shortData) {
 async function searchYoutube(item) {
     let jsonifiedYoutubeData;
     // Fetch if there is no local storage
+    // let hasHits = true;
     if(!localStorage.getItem(item)) {
         // Encodes the item to search for url with no spaces and removes quotes
         newItem = encodeURI(item).split(`%22`).join(''); 
@@ -255,21 +260,33 @@ async function searchYoutube(item) {
         //
         // Code: If the return list is empty, then set localstorage of item to 'N/A', and empty return.  In the non-associated else block, make sure that if localstorage of item is 'N/A', then empty return there as well
         //
+        // if (!jsonifiedYoutubeData.length) {
+        //     jsonifiedYoutubeData = 'N/A';
+            // hasHits=false;
+        // }
+        //
+
 
         // Store fetched data into local storage
 
         
         localStorage[item] = JSON.stringify(jsonifiedYoutubeData);
 
-        console.log(jsonifiedYoutubeData);
-        console.log('Queried, stored in local storage, and returned data.')
+        // console.log(jsonifiedYoutubeData);
+        console.log(`Queried, stored in local storage, and returned: \n${item}`)
         return jsonifiedYoutubeData
     } else { // Pull from local storage
         jsonifiedYoutubeData = await JSON.parse(localStorage.getItem(item))
 
-        console.log('Found data in local storage and returned')
-        console.log(jsonifiedYoutubeData);
+        console.log(`Found data in local storage and returned: \n${item}`)
+        // console.log(jsonifiedYoutubeData);
+
+        // if (jsonifiedYoutubeData === 'N/A') {
+        //     hasHits = false;
+        // }
+
         return jsonifiedYoutubeData
+        // return [jsonifiedYoutubeData,hasHits]
     }
 
     // return the data
@@ -283,9 +300,9 @@ async function searchAnime(search) {
     
     // Queries the short and long anime data
     const jsonifiedAnimeShortData = await getAnimeShortData(search);
-    console.log(jsonifiedAnimeShortData)
+    // console.log(jsonifiedAnimeShortData)
     jsonifiedAnimeLongDataList = await getAnimeLongData(jsonifiedAnimeShortData);
-    console.log(jsonifiedAnimeLongDataList)
+    // console.log(jsonifiedAnimeLongDataList)
 
     
     // Search youtube for each OP/ED
