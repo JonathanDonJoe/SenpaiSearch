@@ -4,48 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Front End Project</title>
+    <title>senpai search.</title>
     <link href='styles/index.css' rel='stylesheet'></link>
 </head>
 <body>
     
     
     <main class='main-container'>
+        
         <section class='first-page-container'>
             <div class='nav-bar'>
-                <h2 id='reset'>RESET</h2>
-                <button onclick="myMove()">Click Me</button>
+                <h2 class='welcome'>welcome/ようこそ</h2>
+                <h2 class='sitename'>senpai search.</h1>
+                <h2 class='sub'>anime アニメ op/ep collection</h2>
             </div>
             <div id='search-container'>
-                <input id="search-bar" type='text' name='animesearch' placeholder="Find your anime music!">
-                <button type="submit" class="search-button">
-                YATA!
-                </button>
+                <input id="search-bar" type='text' placeholder="search...">
             </div>
         </section>
-
-
-
-
+        
         <section class="second-page-container hidden">
             <div class="card-container">
-
             </div>
         </section>
-
-
-
-
+        
         <section class="big-card hidden">
-        <!-- <span id="close">&times;</span> -->
         </section>
-
+        <a id="back-to-top" href="#"><strong>⬆</strong></a>
     </main>
+        <div id='images-container'>
+            <img id='noface' src="/images/noface.png"/>
+        </div>
 
 <!--images for cool sliding homepage decor-->
-    <div id='images-container'>
-        <img id='luffy' src="/images/One-Piece-Luffy-PNG-Transparent-Image.png" name="slide" id="slide"/>
-    </div>
     
 <script src='scripts/index.js'></script>
 <!-- <script src='scripts/cards.js'></script> -->

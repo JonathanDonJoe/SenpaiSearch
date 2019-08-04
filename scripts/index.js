@@ -1,22 +1,34 @@
 
-const youtubeAPIKey = 'AIzaSyBS4knofqrTkrRQ5ReSUUGqG8GoC2s6GVg';
+const youtubeAPIKey = 'AIzaSyBZp_ebiq2KyPi2lw8J0muu0vxB4TgVONA';
 
 
 
 // console.log(document.querySelector('.card-container'));
-// Accordian
+// Click
+function fadeOut(e, speed) {
+    if(!e.style.opacity)
+    {
+        e.style.opacity = 1;
+    }
+    setInterval(function(){
+
+ e.style.opacity -= 0.02;
+ 
+    }, speed /50);
+
+}
+fadeOut(noface, 30000);
 
 // Event listener for the Home text
-document.querySelector('#reset').addEventListener('click',(e) => {
+document.querySelector('.nav-bar').addEventListener('click',(e) => {
     e.preventDefault();
     const secondPage = document.querySelector('.second-page-container')
     // secondPage.style.display = 'none';
     secondPage.classList.add('hidden')
-    })
+})
 
 function getClosestParent(el) {
     for ( ; el && el !== document; el = el.parentNode ) {
-        // Do something...
         if(el.classList.contains('card')) {
             return el
         }
@@ -25,7 +37,8 @@ function getClosestParent(el) {
 
 
 // Event listener for search button
-document.querySelector('.search-button').addEventListener('click', async function(e) {
+document.querySelector('#search-bar').addEventListener('keyup', async function(e) {
+    if (e.keyCode === 13) {    
     let userInput = document.querySelector('#search-bar').value
     console.log(`User has inputted: ${userInput}`)
     // Check if search bar is empty
@@ -66,6 +79,8 @@ document.querySelector('.search-button').addEventListener('click', async functio
             console.log(jsonifiedAnimeLongDataList[ourTarget.dataset.index])
             const bigCard = makeBigCard(jsonifiedAnimeLongDataList[ourTarget.dataset.index]);
             bigCard.classList.remove('hidden');
+            // scroll to top of page on card click
+            window.scrollTo(0, 0);
             } 
         }
 
@@ -73,8 +88,8 @@ document.querySelector('.search-button').addEventListener('click', async functio
         document.querySelector('.card-container').addEventListener('click', window.populateBigCard)
         showCardContainer();
     }
+}
 })
-
 
 function showCardContainer() {
     const secondPage = document.querySelector('.second-page-container')
@@ -106,7 +121,7 @@ function addNextButton(container, videoElement, youtubeObject, vTitle) {
     var scrollVideo = nextVideo(videoElement);
     const button = document.createElement('button');
     button.classList.add('next-video-button');
-    button.innerText = 'Next Video';
+    button.innerText = 'next video';
     container.append(button);
     button.addEventListener('click', () => scrollVideo(youtubeObject, vTitle));
 
@@ -130,11 +145,12 @@ function makeBigCard(jsonifiedAnimeLongData) {
     <div class="big-card-moreinfo">
         <div class="synopsis">${jsonifiedAnimeLongData.synopsis}</div>
         <br>
-        <div class="genre">Genre: ${animeGenres.join(', ')}</div>
-        <div class="rating">Rating: ${jsonifiedAnimeLongData.rating}</div>
-        <div class="score">Score: ${jsonifiedAnimeLongData.score}</div>
-        <div class="studios">Studio: ${jsonifiedAnimeLongData.studios[0].name}</div>
+        <div class="genre">${animeGenres.join(', ')}</div>
+        <div class="rating">${jsonifiedAnimeLongData.rating}</div>
+        <div class="score">${jsonifiedAnimeLongData.score}</div>
+        <div class="studios">${jsonifiedAnimeLongData.studios[0].name}</div>
     </div>
+    <div class="overlay"></div>
     `;
     // console.log(bigCard)
     
@@ -228,22 +244,6 @@ async function createCard(jsonifiedAnimeLongData, i) {
     cardContainer.appendChild(cardItem)
 
 }
-
-// SKELETON ANIMATION use this to move pictures on the home page - UI - DO
-function myMove() {
-    var elem = document.getElementById('luffy');   
-    var pos = 0;
-    var id = setInterval(frame, 10);
-    function frame() {
-      if (pos == 350) {
-        clearInterval(id);
-      } else {
-        pos++; 
-        elem.style.bottom = pos + 'px'; 
-        elem.style.right = pos + 'px'; 
-        };
-    };
-};
 
 // gets the short anime object
 async function getAnimeShortData(search) {
@@ -341,8 +341,5 @@ async function searchAnime(search) {
 
     return jsonifiedAnimeLongDataList;
 }
-
-
-
 
 // main();
