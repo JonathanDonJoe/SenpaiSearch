@@ -1,13 +1,15 @@
 # Anime Opening and Ending Themes Search
 
 ### Description:
-Searches for anime opening and ending themes.  Information acquired through the [Jikan unofficial MyAnimeList API](https://jikan.docs.apiary.io/#) and the [Official Youtube Data API](https://developers.google.com/youtube/v3/).  
+Created for anime fans who want quick access to music from their favorite shows. Searches for both anime opening and ending themes.  
+
 
 Limited to only the official openings and endings in the native language.  Only displays youtube videos that do not infringe on copyright.
 
 
-### Requirements: 
-* Youtube Data v3 API key
+### Data Sources:
+Data acquired from the [Jikan unofficial MyAnimeList API](https://jikan.docs.apiary.io/#) and the [Official Youtube Data API](https://developers.google.com/youtube/v3/).  
+
 
 
 
@@ -33,6 +35,6 @@ Limited to only the official openings and endings in the native language.  Only 
 >>>>>> : queries youtube API and stores for future  
 >>>>>>
 >>>> createBigCardVideos()  
->>>>> creates embedded videos from ids  
+>>>>> creates embedded videos from youtube ids  
 
                 
