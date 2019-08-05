@@ -107,6 +107,13 @@ function makeBigCard(jsonifiedAnimeLongData) {
     const bigCard = document.querySelector('.big-card')
     
     let animeGenres = jsonifiedAnimeLongData.genres.map(item => item.name)
+    let studio;
+    if(jsonifiedAnimeLongData.studios.length) {
+        studio = jsonifiedAnimeLongData.studios[0].name;
+    } else {
+        studio = 'Unknown Studio'
+    }
+
 
     bigCard.innerHTML =
     `
@@ -119,7 +126,7 @@ function makeBigCard(jsonifiedAnimeLongData) {
         <div class="genre">${animeGenres.join(', ')}</div>
         <div class="rating">${jsonifiedAnimeLongData.rating}</div>
         <div class="score">${jsonifiedAnimeLongData.score}</div>
-        <div class="studios">${jsonifiedAnimeLongData.studios[0].name}</div>
+        <div class="studios">${studio}</div>
     </div>
     <div class="overlay"></div>
     `;
