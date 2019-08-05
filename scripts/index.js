@@ -1,4 +1,4 @@
-const youtubeAPIKey = 'YOUTUBE_API_KEY';
+const youtubeAPIKey = 'AIzaSyC0VxcANY18gSIQH7pmb-gb0dUSJt-pikk';
 
 // Click
 function fadeOut(e, speed) {
@@ -29,7 +29,7 @@ function getClosestParent(el) {
 document.querySelector('#search-bar').addEventListener('keyup', async function(e) {
     if (e.keyCode === 13) {    
         let userInput = document.querySelector('#search-bar').value;
-        console.log(`User has inputted: ${userInput}`);
+        // console.log(`User has inputted: ${userInput}`);
     // Check if search bar is empty
         if ( userInput.length < 3 ){
             // Alert if the input is invalid/empty
@@ -145,14 +145,16 @@ function makeBigCard(jsonifiedAnimeLongData) {
     openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
     endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
     
-    console.log(`The compiled list of OP/EDs:`);
-    console.log(compiledList);
+    // console.log(`The compiled list of OP/EDs:`);
+    // console.log(compiledList);
 
     let awaitYoutubeItem;
     compiledList.forEach(async function(item) { 
         awaitYoutubeItem = await searchYoutube(item);
-        await createBigCardVideos(awaitYoutubeItem);
-        await console.log(`Successfully Embedded Video: \n ${item}`);
+        if (awaitYoutubeItem.items.length){
+            await createBigCardVideos(awaitYoutubeItem);
+        }
+        // await console.log(`Successfully Embedded Video: \n ${item}`);
     });
     return bigCard;
 }
@@ -243,11 +245,11 @@ async function searchYoutube(item) {
         localStorage[item] = JSON.stringify(jsonifiedYoutubeData);
 
         // console.log(jsonifiedYoutubeData);
-        console.log(`Queried, stored in local storage, and returned: \n${item}`)
+        // console.log(`Queried, stored in local storage, and returned: \n${item}`)
         return jsonifiedYoutubeData
     } else { // Pull from local storage
         jsonifiedYoutubeData = await JSON.parse(localStorage.getItem(item))
-        console.log(`Found data in local storage and returned: \n${item}`)
+        // console.log(`Found data in local storage and returned: \n${item}`)
         return jsonifiedYoutubeData
     }
 }
