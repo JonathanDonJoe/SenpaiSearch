@@ -8,15 +8,6 @@ function fadeOut(e, speed) {
     setInterval(function() {e.style.opacity -= 0.02;}, speed /50);
 }
 
-fadeOut(noface, 30000);
-
-// Event listener for the Home text
-document.querySelector('.nav-bar').addEventListener('click',(e) => {
-    e.preventDefault();
-    const secondPage = document.querySelector('.second-page-container')
-    secondPage.classList.add('hidden')
-})
-
 function getClosestParent(el) {
     for ( ; el && el !== document; el = el.parentNode ) {
         if(el.classList.contains('card')) {
@@ -25,57 +16,14 @@ function getClosestParent(el) {
     }
 };
 
-// Event listener for search button
-document.querySelector('#search-bar').addEventListener('keyup', async function(e) {
-    if (e.keyCode === 13) {    
-        let userInput = document.querySelector('#search-bar').value;
-        // console.log(`User has inputted: ${userInput}`);
-    // Check if search bar is empty
-        if ( userInput.length < 3 ){
-            // Alert if the input is invalid/empty
-            alert('Don\'t forget to enter something!');
-        } else {
-            // If input is valid continue with search and populate
-            e.preventDefault();
-
-            const cardContainer = document.querySelector('.card-container');
-            // Clear card container
-            cardContainer.removeEventListener('click', window.populateBigCard);
-            cardContainer.innerHTML = '';
-
-            const secondPage = document.querySelector('.second-page-container');
-            secondPage.classList.remove('hidden');
-
-
-            const jsonifiedAnimeLongDataList =  await searchAnime(userInput);
-            
-            window.populateBigCard = (e) => {
-                if (e.target !== e.currentTarget) {
-                    let ourTarget = getClosestParent(e.target);
-                    const bigCard = makeBigCard(jsonifiedAnimeLongDataList[ourTarget.dataset.index]);
-                    bigCard.classList.remove('hidden');
-                    // scroll to top of page on card click
-                    window.scrollTo(0, 0);
-                } 
-            }
-
-            // Container event listener
-            document.querySelector('.card-container').addEventListener('click', window.populateBigCard)
-            showCardContainer();
-        }
-    }
-})
-
 function showCardContainer() {
     const secondPage = document.querySelector('.second-page-container');
     secondPage.classList.remove('hidden');
 }
 
-
 function updateVideo(videoElement, youtubeObject, count) {
-    videoElement.data = `https://www.youtube.com/embed/${youtubeObject.items[count].id.videoId}`; // the video
+    videoElement.data = `https://www.youtube.com/embed/${youtubeObject.items[count].id.videoId}`;
 }
-
 
 const nextVideo = function(el) {
     let count = 0;
@@ -90,7 +38,6 @@ const nextVideo = function(el) {
     }
 }
 
-
 function addNextButton(container, videoElement, youtubeObject, vTitle) {
     var scrollVideo = nextVideo(videoElement);
     const button = document.createElement('button');
@@ -99,9 +46,6 @@ function addNextButton(container, videoElement, youtubeObject, vTitle) {
     container.append(button);
     button.addEventListener('click', () => scrollVideo(youtubeObject, vTitle));
 }
-
-
-
 
 function makeBigCard(jsonifiedAnimeLongData) {
     const bigCard = document.querySelector('.big-card')
@@ -113,7 +57,6 @@ function makeBigCard(jsonifiedAnimeLongData) {
     } else {
         studio = 'Unknown Studio'
     }
-
 
     bigCard.innerHTML =
     `
@@ -145,16 +88,16 @@ function makeBigCard(jsonifiedAnimeLongData) {
     openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
     endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
     
-    // console.log(`The compiled list of OP/EDs:`);
-    // console.log(compiledList);
+    console.log(`The compiled list of OP/EDs:`);
+    console.log(compiledList);
 
     let awaitYoutubeItem;
     compiledList.forEach(async function(item) { 
-        awaitYoutubeItem = await searchYoutube(item);
+        awaitYoutubeItem = await getYoutubeItem(item);
         if (awaitYoutubeItem.items.length){
             await createBigCardVideos(awaitYoutubeItem);
         }
-        // await console.log(`Successfully Embedded Video: \n ${item}`);
+        await console.log(`Successfully Embedded Video: \n ${item}`);
     });
     return bigCard;
 }
@@ -229,28 +172,34 @@ async function getAnimeLongData(shortData) {
     return await malIdList;
 }
 
-
 async function searchYoutube(item) {
-    let jsonifiedYoutubeData;
+    // Encodes the item to search for url with no spaces and removes quotes
+    newItem = encodeURI(item).split(`%22`).join(''); 
+    const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&key=${youtubeAPIKey}&q=${newItem}`;
+    // Queries for the item and formats to json
+    const fetchedYoutubeData = await fetch(youtubeURL);
+    const jsonifiedYoutubeData = await fetchedYoutubeData.json();
+
+    // Store fetched data into local storage
+    localStorage[item] = JSON.stringify(jsonifiedYoutubeData);
+
+    // console.log(jsonifiedYoutubeData);
+    console.log(`Queried, stored in local storage, and returned: \n${item}`)
+    return jsonifiedYoutubeData
+}
+
+async function searchLocalStorage(item) {
+    const jsonifiedYoutubeData = await JSON.parse(localStorage.getItem(item));
+    console.log(`Found data in local storage and returned: \n${item}`);
+    return jsonifiedYoutubeData
+}
+
+async function getYoutubeItem(item) {
     // Fetch if there is no local storage
     if(!localStorage.getItem(item)) {
-        // Encodes the item to search for url with no spaces and removes quotes
-        newItem = encodeURI(item).split(`%22`).join(''); 
-        const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&key=${youtubeAPIKey}&q=${newItem}`;
-        // Queries for the item and formats to json
-        const fetchedYoutubeData = await fetch(youtubeURL);
-        const jsonifiedYoutubeData = await fetchedYoutubeData.json();
-  
-        // Store fetched data into local storage
-        localStorage[item] = JSON.stringify(jsonifiedYoutubeData);
-
-        // console.log(jsonifiedYoutubeData);
-        // console.log(`Queried, stored in local storage, and returned: \n${item}`)
-        return jsonifiedYoutubeData
+        return searchYoutube(item);
     } else { // Pull from local storage
-        jsonifiedYoutubeData = await JSON.parse(localStorage.getItem(item))
-        // console.log(`Found data in local storage and returned: \n${item}`)
-        return jsonifiedYoutubeData
+        return searchLocalStorage(item);
     }
 }
 
@@ -258,7 +207,62 @@ async function searchAnime(search) {
     // Queries the short and long anime data
     const jsonifiedAnimeShortData = await getAnimeShortData(search);
     // console.log(jsonifiedAnimeShortData)
-    jsonifiedAnimeLongDataList = await getAnimeLongData(jsonifiedAnimeShortData);
+    const jsonifiedAnimeLongDataList = await getAnimeLongData(jsonifiedAnimeShortData);
     // console.log(jsonifiedAnimeLongDataList)
     return jsonifiedAnimeLongDataList;
 }
+
+// Event listener for the Home text
+function navEvent(e) {
+    e.preventDefault();
+    const secondPage = document.querySelector('.second-page-container')
+    secondPage.classList.add('hidden')
+}
+
+// Event listener for search button
+async function searchEvent(e) {
+    if (e.keyCode === 13) {    
+        let userInput = document.querySelector('#search-bar').value;
+        console.log(`User has inputted: ${userInput}`);
+    // Check if search bar is empty
+        if ( userInput.length < 3 ){
+            // Alert if the input is invalid/empty
+            alert('Don\'t forget to enter something!');
+        } else {
+            // If input is valid continue with search and populate
+            e.preventDefault();
+
+            const cardContainer = document.querySelector('.card-container');
+            // Clear card container
+            cardContainer.removeEventListener('click', window.populateBigCard);
+            cardContainer.innerHTML = '';
+
+            const secondPage = document.querySelector('.second-page-container');
+            secondPage.classList.remove('hidden');
+
+
+            const jsonifiedAnimeLongDataList =  await searchAnime(userInput);
+            
+            window.populateBigCard = (e) => {
+                if (e.target !== e.currentTarget) {
+                    let ourTarget = getClosestParent(e.target);
+                    const bigCard = makeBigCard(jsonifiedAnimeLongDataList[ourTarget.dataset.index]);
+                    bigCard.classList.remove('hidden');
+                    // scroll to top of page on card click
+                    window.scrollTo(0, 0);
+                } 
+            }
+
+            // Container event listener
+            document.querySelector('.card-container').addEventListener('click', window.populateBigCard)
+            showCardContainer();
+        }
+    }
+}
+
+
+document.querySelector('.nav-bar').addEventListener('click', navEvent)
+
+document.querySelector('#search-bar').addEventListener('keyup', searchEvent)
+
+fadeOut(noface, 30000);
