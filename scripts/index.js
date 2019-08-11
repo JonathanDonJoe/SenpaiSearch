@@ -11,7 +11,7 @@ function fadeOut(e, speed) {
 function getClosestParent(el) {
     for ( ; el && el !== document; el = el.parentNode ) {
         if(el.classList.contains('card')) {
-            return el
+            return el;
         }
     }
 };
@@ -47,18 +47,12 @@ function addNextButton(container, videoElement, youtubeObject, vTitle) {
     button.addEventListener('click', () => scrollVideo(youtubeObject, vTitle));
 }
 
-
 function checkDataArray(jsonifiedAnimeLongData, searchKey) {
-    // let returnItem;
-    // console.log(jsonifiedAnimeLongData)
-    // console.log(searchKey)
-    // console.log(typeof(jsonifiedAnimeLongData[searchKey]) === 'object')
-    // console.log(typeof(jsonifiedAnimeLongData[searchKey]))
     if ((jsonifiedAnimeLongData[searchKey] !== null) && !(typeof(jsonifiedAnimeLongData[searchKey]) === 'object')) { // not null and does not return an object
-        // console.log('1')
+        // console.log('1');
         return jsonifiedAnimeLongData[searchKey];
     } else if ((jsonifiedAnimeLongData[searchKey] !== null) && jsonifiedAnimeLongData[searchKey].length && jsonifiedAnimeLongData[searchKey] !== 'rating' ) {  // not null, has a length, and isn't a rating
-        // console.log('here')
+        // console.log('here');
         return jsonifiedAnimeLongData[searchKey].map(item => item.name).join(', ');
     } else {
         return `Unknown ${searchKey}`;
@@ -66,7 +60,7 @@ function checkDataArray(jsonifiedAnimeLongData, searchKey) {
 }
 
 function makeBigCard(jsonifiedAnimeLongData) {
-    const bigCard = document.querySelector('.big-card')
+    const bigCard = document.querySelector('.big-card');
     
     const animeImg = checkDataArray(jsonifiedAnimeLongData, 'image_url');
     const animeTitles = checkDataArray(jsonifiedAnimeLongData, 'title');
@@ -75,13 +69,6 @@ function makeBigCard(jsonifiedAnimeLongData) {
     const animeRating = checkDataArray(jsonifiedAnimeLongData, 'rating');
     const animeScore = checkDataArray(jsonifiedAnimeLongData, 'score');
     const animeStudios = checkDataArray(jsonifiedAnimeLongData, 'studios');
-    
-    // let studio;
-    // if(jsonifiedAnimeLongData.studios.length) {
-    //     studio = jsonifiedAnimeLongData.studios[0].name;
-    // } else {
-    //     studio = 'Unknown Studio'
-    // }
 
     bigCard.innerHTML =
     `
@@ -93,23 +80,23 @@ function makeBigCard(jsonifiedAnimeLongData) {
         <br>
         <div class="genre">${animeGenres}</div>
         <div class="rating">${animeRating}</div>
-        <div class="score">${animeScore}</div>
-        <div class="studios">${animeStudios}</div>
+        <div class="score">Score: ${animeScore}</div>
+        <div class="studios">Studio: ${animeStudios}</div>
     </div>
     <div class="overlay"></div>
     `;
 
     // Click event on close button
     document.querySelector('#close').addEventListener('click', (e) => {
-        const bigCard = document.querySelector('.big-card')
+        const bigCard = document.querySelector('.big-card');
         while (bigCard.firstChild) {bigCard.removeChild(bigCard.firstChild);};
-        // bigCard.innerHTML = ''
+        // bigCard.innerHTML = '';
     });
 
     const openingList = jsonifiedAnimeLongData.opening_themes;
     const endingList = jsonifiedAnimeLongData.ending_themes;
 
-    const compiledList = []
+    const compiledList = [];
     openingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' OP'));
     endingList.forEach(item => compiledList.push(item.split(' (ep')[0] + ' ED'));
     
@@ -141,12 +128,12 @@ function createBigCardVideos(youtubeObject) {
 
     const vTitle = document.createElement('h3');
     vTitle.innerText = videoTitle;
-    vTitle.classList.add('video-title')    
+    vTitle.classList.add('video-title');
     el.append(vTitle);
 
     const video = document.createElement('object');
     video.data = link;
-    el.append(video)
+    el.append(video);
    
     addNextButton(el, video, youtubeObject, vTitle);
     container.append(el);
@@ -209,14 +196,14 @@ async function searchYoutube(item) {
     localStorage[item] = JSON.stringify(jsonifiedYoutubeData);
 
     // console.log(jsonifiedYoutubeData);
-    console.log(`Queried, stored in local storage, and returned: \n${item}`)
-    return jsonifiedYoutubeData
+    console.log(`Queried, stored in local storage, and returned: \n${item}`);
+    return jsonifiedYoutubeData;
 }
 
 async function searchLocalStorage(item) {
     const jsonifiedYoutubeData = await JSON.parse(localStorage.getItem(item));
     console.log(`Found data in local storage and returned: \n${item}`);
-    return jsonifiedYoutubeData
+    return jsonifiedYoutubeData;
 }
 
 async function getYoutubeItem(item) {
@@ -231,17 +218,17 @@ async function getYoutubeItem(item) {
 async function searchAnime(search) {
     // Queries the short and long anime data
     const jsonifiedAnimeShortData = await getAnimeShortData(search);
-    // console.log(jsonifiedAnimeShortData)
+    // console.log(jsonifiedAnimeShortData);
     const jsonifiedAnimeLongDataList = await getAnimeLongData(jsonifiedAnimeShortData);
-    // console.log(jsonifiedAnimeLongDataList)
+    // console.log(jsonifiedAnimeLongDataList);
     return jsonifiedAnimeLongDataList;
 }
 
 // Event listener for the Home text
 function navEvent(e) {
     e.preventDefault();
-    const secondPage = document.querySelector('.second-page-container')
-    secondPage.classList.add('hidden')
+    const secondPage = document.querySelector('.second-page-container');
+    secondPage.classList.add('hidden');
 }
 
 // Event listener for search button
@@ -279,15 +266,17 @@ async function searchEvent(e) {
             }
 
             // Container event listener
-            document.querySelector('.card-container').addEventListener('click', window.populateBigCard)
+            document.querySelector('.card-container').addEventListener('click', window.populateBigCard);
             showCardContainer();
         }
     }
 }
 
+function main() {
+    document.querySelector('.nav-bar').addEventListener('click', navEvent);
+    document.querySelector('#search-bar').addEventListener('keyup', searchEvent);
+    fadeOut(noface, 30000);
+}
 
-document.querySelector('.nav-bar').addEventListener('click', navEvent)
 
-document.querySelector('#search-bar').addEventListener('keyup', searchEvent)
-
-fadeOut(noface, 30000);
+document.addEventListener('DOMContentLoaded', main());
