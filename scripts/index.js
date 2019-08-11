@@ -47,29 +47,54 @@ function addNextButton(container, videoElement, youtubeObject, vTitle) {
     button.addEventListener('click', () => scrollVideo(youtubeObject, vTitle));
 }
 
+
+function checkDataArray(jsonifiedAnimeLongData, searchKey) {
+    // let returnItem;
+    // console.log(jsonifiedAnimeLongData)
+    // console.log(searchKey)
+    // console.log(typeof(jsonifiedAnimeLongData[searchKey]) === 'object')
+    // console.log(typeof(jsonifiedAnimeLongData[searchKey]))
+    if ((jsonifiedAnimeLongData[searchKey] !== null) && !(typeof(jsonifiedAnimeLongData[searchKey]) === 'object')) { // not null and does not return an object
+        // console.log('1')
+        return jsonifiedAnimeLongData[searchKey];
+    } else if ((jsonifiedAnimeLongData[searchKey] !== null) && jsonifiedAnimeLongData[searchKey].length && jsonifiedAnimeLongData[searchKey] !== 'rating' ) {  // not null, has a length, and isn't a rating
+        // console.log('here')
+        return jsonifiedAnimeLongData[searchKey].map(item => item.name).join(', ');
+    } else {
+        return `Unknown ${searchKey}`;
+    }
+}
+
 function makeBigCard(jsonifiedAnimeLongData) {
     const bigCard = document.querySelector('.big-card')
     
-    let animeGenres = jsonifiedAnimeLongData.genres.map(item => item.name)
-    let studio;
-    if(jsonifiedAnimeLongData.studios.length) {
-        studio = jsonifiedAnimeLongData.studios[0].name;
-    } else {
-        studio = 'Unknown Studio'
-    }
+    const animeImg = checkDataArray(jsonifiedAnimeLongData, 'image_url');
+    const animeTitles = checkDataArray(jsonifiedAnimeLongData, 'title');
+    const animeSynopsis = checkDataArray(jsonifiedAnimeLongData, 'synopsis');
+    const animeGenres = checkDataArray(jsonifiedAnimeLongData, 'genres');
+    const animeRating = checkDataArray(jsonifiedAnimeLongData, 'rating');
+    const animeScore = checkDataArray(jsonifiedAnimeLongData, 'score');
+    const animeStudios = checkDataArray(jsonifiedAnimeLongData, 'studios');
+    
+    // let studio;
+    // if(jsonifiedAnimeLongData.studios.length) {
+    //     studio = jsonifiedAnimeLongData.studios[0].name;
+    // } else {
+    //     studio = 'Unknown Studio'
+    // }
 
     bigCard.innerHTML =
     `
     <span id="close">&times;</span>
-    <div class="big-card-image"><img src="${jsonifiedAnimeLongData.image_url}"/></div>
-    <h1 class="big-card-title">${jsonifiedAnimeLongData.title}</h1>
+    <div class="big-card-image"><img src="${animeImg}"/></div>
+    <h1 class="big-card-title">${animeTitles}</h1>
     <div class="big-card-moreinfo">
-        <div class="synopsis">${jsonifiedAnimeLongData.synopsis}</div>
+        <div class="synopsis">${animeSynopsis}</div>
         <br>
-        <div class="genre">${animeGenres.join(', ')}</div>
-        <div class="rating">${jsonifiedAnimeLongData.rating}</div>
-        <div class="score">${jsonifiedAnimeLongData.score}</div>
-        <div class="studios">${studio}</div>
+        <div class="genre">${animeGenres}</div>
+        <div class="rating">${animeRating}</div>
+        <div class="score">${animeScore}</div>
+        <div class="studios">${animeStudios}</div>
     </div>
     <div class="overlay"></div>
     `;
