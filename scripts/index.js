@@ -1,4 +1,5 @@
-const youtubeAPIKey = 'AIzaSyC0VxcANY18gSIQH7pmb-gb0dUSJt-pikk';
+const youtubeAPIKey = 'INSERT API KEY HERE';
+const matureFilter = true;
 
 // Click
 function fadeOut(e, speed) {
@@ -173,13 +174,23 @@ async function getAnimeShortData(search) {
 // Queries for the long data from the short data
 async function getAnimeLongData(shortData) {
     const malIdList = [];
-    for (let i=0; i < shortData.results.length && i<9; i++) {
+    let isMature;
+    let createMoreCardsCount = 9
+    for (let i=0; i < shortData.results.length && createMoreCardsCount > 0; i++, createMoreCardsCount--) {
         const malID = shortData.results[i].mal_id;
         const animeURL = `https://api.jikan.moe/v3/anime/${malID}/`;
         const fetchedAnimeLongData = await fetch(animeURL);
         const fetchedAnimeLongDataJSON = await fetchedAnimeLongData.json();
-        malIdList.push(fetchedAnimeLongDataJSON);
-        await createCard(fetchedAnimeLongDataJSON, i);
+        isMature = checkDataArray(fetchedAnimeLongDataJSON, 'genres').includes('Hentai');
+        console.log(isMature);
+        if (isMature && matureFilter) {
+            createMoreCardsCount++
+        } else {
+            malIdList.push(fetchedAnimeLongDataJSON);
+            await createCard(fetchedAnimeLongDataJSON, i);
+        }
+        console.log(createMoreCardsCount);
+        
     }
     return await malIdList;
 }
