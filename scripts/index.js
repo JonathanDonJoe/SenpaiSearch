@@ -1,5 +1,15 @@
 const youtubeAPIKey = 'INSERT API KEY HERE';
-const matureFilter = true;
+let matureFilter = true;
+const matureSwitch = document.querySelector('.mature-switch-input');
+
+
+// Changes Mature Filter
+function changeMatureFilter() {
+    // console.log(matureSwitch.checked);
+    matureFilter = matureSwitch.checked ? true : false;
+    // console.log(matureFilter);
+}
+
 
 // Click
 function fadeOut(e, speed) {
@@ -182,14 +192,14 @@ async function getAnimeLongData(shortData) {
         const fetchedAnimeLongData = await fetch(animeURL);
         const fetchedAnimeLongDataJSON = await fetchedAnimeLongData.json();
         isMature = checkDataArray(fetchedAnimeLongDataJSON, 'genres').includes('Hentai');
-        console.log(isMature);
+        // console.log(isMature);
         if (isMature && matureFilter) {
             createMoreCardsCount++
         } else {
             malIdList.push(fetchedAnimeLongDataJSON);
             await createCard(fetchedAnimeLongDataJSON, i);
         }
-        console.log(createMoreCardsCount);
+        // console.log(createMoreCardsCount);
         
     }
     return await malIdList;
@@ -286,6 +296,8 @@ async function searchEvent(e) {
 function main() {
     document.querySelector('.nav-bar').addEventListener('click', navEvent);
     document.querySelector('#search-bar').addEventListener('keyup', searchEvent);
+    matureSwitch.addEventListener('change', changeMatureFilter);
+
     fadeOut(noface, 30000);
 }
 
