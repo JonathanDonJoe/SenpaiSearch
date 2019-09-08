@@ -489,3 +489,10 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.mature-switch {
+    position: fixed;
+    bottom: 30px;
+    left: 40px;
+    z-index: 99;
+}
