@@ -8,6 +8,7 @@ function changeMatureFilter() {
     // console.log(matureSwitch.checked);
     matureFilter = matureSwitch.checked ? true : false;
     // console.log(matureFilter);
+    navEvent();
 }
 
 
@@ -246,8 +247,8 @@ async function searchAnime(search) {
 }
 
 // Event listener for the Home text
-function navEvent(e) {
-    e.preventDefault();
+function navEvent() {
+    // e.preventDefault();
     const secondPage = document.querySelector('.second-page-container');
     secondPage.classList.add('hidden');
 }
