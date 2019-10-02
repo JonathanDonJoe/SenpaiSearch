@@ -189,7 +189,7 @@ async function getAnimeLongData(shortData) {
     let createMoreCardsCount = 9
     for (let i=0; i < shortData.results.length && createMoreCardsCount > 0; i++, createMoreCardsCount--) {
         const malID = shortData.results[i].mal_id;
-        const animeURL = `https://api.jikan.moe/v3/anime/${malID}/`;
+        const animeURL = `https://api.jikan.moe/v3/anime/${malID}`;
         const fetchedAnimeLongData = await fetch(animeURL);
         const fetchedAnimeLongDataJSON = await fetchedAnimeLongData.json();
         isMature = checkDataArray(fetchedAnimeLongDataJSON, 'genres').includes('Hentai');
