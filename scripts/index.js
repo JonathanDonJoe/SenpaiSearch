@@ -1,4 +1,4 @@
-const youtubeAPIKey = 'INSERT API KEY HERE';
+const youtubeAPIKey = 'AIzaSyD6fvwCoTXlArrhBPzpwVC7IS8t-Dtpkw4';
 let matureFilter = true;
 const matureSwitch = document.querySelector('.mature-switch-input');
 
@@ -198,7 +198,7 @@ async function getAnimeLongData(shortData) {
             createMoreCardsCount++
         } else {
             malIdList.push(fetchedAnimeLongDataJSON);
-            await createCard(fetchedAnimeLongDataJSON, i);
+            await createCard(fetchedAnimeLongDataJSON, malIdList.length - 1);
         }
         // console.log(createMoreCardsCount);
         
