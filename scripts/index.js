@@ -1,4 +1,4 @@
-const youtubeAPIKey = 'AIzaSyD6fvwCoTXlArrhBPzpwVC7IS8t-Dtpkw4';
+const youtubeAPIKey = 'INSER API KEY HERE';
 let matureFilter = true;
 const matureSwitch = document.querySelector('.mature-switch-input');
 
