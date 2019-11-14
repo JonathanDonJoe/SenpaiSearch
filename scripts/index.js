@@ -198,7 +198,7 @@ async function getAnimeLongData(shortData) {
             createMoreCardsCount++
         } else {
             malIdList.push(fetchedAnimeLongDataJSON);
-            await createCard(fetchedAnimeLongDataJSON, i);
+            await createCard(fetchedAnimeLongDataJSON, malIdList.length - 1);
         }
         // console.log(createMoreCardsCount);
         
